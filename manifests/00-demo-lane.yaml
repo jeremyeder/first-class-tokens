@@ -1,0 +1,171 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kueue-demo
+  labels:
+    kueue.openshift.io/managed: "true"
+    app.kubernetes.io/part-of: business-priority-demo
+---
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: ResourceFlavor
+metadata:
+  name: demo-cpu
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+spec:
+  nodeLabels: {}
+---
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: ClusterQueue
+metadata:
+  name: business-priority-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+spec:
+  namespaceSelector:
+    matchLabels:
+      app.kubernetes.io/part-of: business-priority-demo
+  resourceGroups:
+    - coveredResources:
+        - cpu
+        - memory
+      flavors:
+        - name: demo-cpu
+          resources:
+            - name: cpu
+              nominalQuota: 500m
+            - name: memory
+              nominalQuota: 512Mi
+---
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: LocalQueue
+metadata:
+  name: business-priority
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+spec:
+  clusterQueue: business-priority-demo
+---
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: WorkloadPriorityClass
+metadata:
+  name: fare-first-class
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+value: 1000
+description: Highest business-priority work.
+---
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: WorkloadPriorityClass
+metadata:
+  name: fare-business
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+value: 500
+description: Important customer-impacting work.
+---
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: WorkloadPriorityClass
+metadata:
+  name: fare-economy
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+value: 100
+description: Deferrable background work.
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: renewal-recovery-plan
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.x-k8s.io/queue-name: business-priority
+    kueue.x-k8s.io/priority-class: fare-economy
+    demo.kueue.io/fixture: synthetic-event-feed
+    demo.kueue.io/business-source: crm
+    demo.kueue.io/workstream: renewal-recovery
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: work
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "300"]
+          resources:
+            requests:
+              cpu: 500m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: auth-regression-fix
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.x-k8s.io/queue-name: business-priority
+    kueue.x-k8s.io/priority-class: fare-business
+    demo.kueue.io/fixture: synthetic-event-feed
+    demo.kueue.io/business-source: issue-tracker
+    demo.kueue.io/workstream: checkout-auth
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: work
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          # @spec DEMO-LIFECYCLE-005
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              trap 'exit 0' TERM INT
+              while :; do
+                sleep 3600 &
+                wait $!
+              done
+          resources:
+            requests:
+              cpu: 500m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: documentation-refresh
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.x-k8s.io/queue-name: business-priority
+    kueue.x-k8s.io/priority-class: fare-economy
+    demo.kueue.io/fixture: synthetic-event-feed
+    demo.kueue.io/business-source: planned-work
+    demo.kueue.io/workstream: documentation
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: work
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "300"]
+          resources:
+            requests:
+              cpu: 500m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi

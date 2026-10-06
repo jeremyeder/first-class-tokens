@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: decision-model-config-v3
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/name: diffusiongemma-structured-decision
+    app.kubernetes.io/component: decision-model
+    app.kubernetes.io/part-of: business-priority-demo
+immutable: true
+data:
+  # The model revision is the immutable Hugging Face commit used by vLLM and
+  # the tokenizer. Update this value deliberately when changing model weights.
+  MODEL_ID: RedHatAI/diffusiongemma-26B-A4B-it-FP8-dynamic
+  MODEL_REVISION: 3b3dae4697494da5a290e9c0461954449e76c4f5
+  SERVED_MODEL_NAME: dgemma
+  CANVAS_LENGTH: "64"
+  VLLM_BASE_IMAGE: vllm/vllm-openai:nightly-e9757321527ca1ecd514c07c1418dd2c53da3d19@sha256:e0eee5c5506bea9bfe350f7d99b07dc49e37d42647a128c2a57ff184551fba10
+  VLLM_REVISION: e9757321527ca1ecd514c07c1418dd2c53da3d19
+  STRUCTURED_SERVER_REVISION: e9757321527ca1ecd514c07c1418dd2c53da3d19
+  STRUCTURED_SERVER_SHA256: adecfdc2ccb2ef845b1dd8e2969c343b14f9a6b226d301cd3e017870d6647052
+  DECISION_IMAGE_TAG: vllm-e9757321527ca1ecd514c07c1418dd2c53da3d19-fp8-r3
+  HF_HOME: /models/cache
+  TRANSFORMERS_CACHE: /models/cache

@@ -1,0 +1,12 @@
+apiVersion: tokens.jeder.github.com/v1alpha1
+kind: ImageLock
+images:
+  intakeController:
+    sourceRevision: 32211f7bee02
+    pullSpec: image-registry.openshift-image-registry.svc:5000/kueue-demo/intake-controller@sha256:22245d70395da53a1e37d01983e246dbd23525b0ab090a92d7e7c81949b40061
+  diffusionGemma:
+    sourceRevision: vllm-e9757321527ca1ecd514c07c1418dd2c53da3d19-fp8-r3
+    pullSpec: image-registry.openshift-image-registry.svc:5000/kueue-demo/diffusiongemma-structured-decision@sha256:b4b71e396e4c518a52cb73e2955a2423d163119e4509316dbd830d2b766c4a85
+    sourceImage: vllm/vllm-openai:nightly-e9757321527ca1ecd514c07c1418dd2c53da3d19@sha256:e0eee5c5506bea9bfe350f7d99b07dc49e37d42647a128c2a57ff184551fba10
+    model: RedHatAI/diffusiongemma-26B-A4B-it-FP8-dynamic
+    modelRevision: 3b3dae4697494da5a290e9c0461954449e76c4f5

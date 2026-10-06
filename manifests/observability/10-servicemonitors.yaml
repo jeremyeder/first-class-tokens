@@ -1,0 +1,41 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: intake-controller
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/name: intake-controller
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/part-of: business-priority-demo
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: intake-controller
+      app.kubernetes.io/component: controller
+      app.kubernetes.io/part-of: business-priority-demo
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 15s
+      scheme: http
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: decision-model
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/name: decision-model
+    app.kubernetes.io/component: model
+    app.kubernetes.io/part-of: business-priority-demo
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: diffusiongemma-structured-decision
+      app.kubernetes.io/component: decision-model
+      app.kubernetes.io/part-of: business-priority-demo
+  endpoints:
+    - port: decisions
+      path: /metrics
+      interval: 15s
+      scheme: http

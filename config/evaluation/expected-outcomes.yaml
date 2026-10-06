@@ -1,0 +1,112 @@
+apiVersion: tokens.jeder.github.com/v1alpha1
+kind: FareQualityEvaluation
+metadata:
+  name: synthetic-business-priority-v1
+spec:
+  # Five sequential calls make a one-off model flip visible while keeping the
+  # gate short enough for a live demo.
+  repeats: 5
+  thresholds:
+    # A first gate allows a small number of classification misses while the
+    # synthetic cases and prompt are calibrated. Do not lower these silently.
+    minimumExactMatchAccuracy: 0.90
+    # Each event must have at least a four-of-five majority class.
+    minimumItemStability: 0.80
+    maximumP95LatencyMs: 5000
+  # These labels are independently authored semantic expectations. They are
+  # never copied into BusinessWorkItems or included in the model request.
+  outcomes:
+    - workItemID: work-item-001
+      eventID: synthetic-crm-001-v1
+      expectedFareClass: First class
+      rationale: Strategic at-risk renewal with material revenue exposure.
+    - workItemID: work-item-002
+      eventID: synthetic-jira-002-v1
+      expectedFareClass: First class
+      rationale: Critical authentication issue blocks customer login.
+    - workItemID: work-item-003
+      eventID: synthetic-strategy-003-v1
+      expectedFareClass: Business
+      rationale: Elevated capacity risk to strategic model serving needs review within five days, without an active outage.
+    - workItemID: work-item-004
+      eventID: synthetic-crm-004-v1
+      expectedFareClass: Business
+      rationale: Enterprise onboarding is at risk in five days but is medium-severity and not blocked.
+    - workItemID: work-item-005
+      eventID: synthetic-jira-005-v1
+      expectedFareClass: Business
+      rationale: Medium-severity billing exception delays invoices, but payments remain available and resolution is due within five days.
+    - workItemID: work-item-006
+      eventID: synthetic-strategy-006-v1
+      expectedFareClass: Economy
+      rationale: Low-risk planned platform change with a thirty-day horizon.
+    - workItemID: work-item-007
+      eventID: synthetic-crm-007-v1
+      expectedFareClass: First class
+      rationale: Strategic high-value renewal is escalated and four days from renewal.
+    - workItemID: work-item-008
+      eventID: synthetic-jira-008-v1
+      expectedFareClass: Economy
+      rationale: Low-severity storage housekeeping has no customer impact.
+    - workItemID: work-item-009
+      eventID: synthetic-strategy-009-v1
+      expectedFareClass: Business
+      rationale: Inference latency breached its 500ms SLO and requires review within seven days.
+    - workItemID: work-item-010
+      eventID: synthetic-crm-010-v1
+      expectedFareClass: First class
+      rationale: Enterprise renewal is at risk and two days from deadline.
+    - workItemID: work-item-011
+      eventID: synthetic-jira-011-v1
+      expectedFareClass: Economy
+      rationale: Routine dependency work has low severity and no customer impact.
+    - workItemID: work-item-012
+      eventID: synthetic-strategy-012-v1
+      expectedFareClass: Business
+      rationale: Enterprise serving rollout has medium risk and a one-week decision horizon.
+    - workItemID: work-item-013
+      eventID: synthetic-crm-013-v1
+      expectedFareClass: Business
+      rationale: Meaningful renewal value is on watch with a three-week horizon.
+    - workItemID: work-item-014
+      eventID: synthetic-jira-014-v1
+      expectedFareClass: Economy
+      rationale: Low-severity audit export has no customer impact.
+    - workItemID: work-item-015
+      eventID: synthetic-strategy-015-v1
+      expectedFareClass: First class
+      rationale: Critical security patch is due immediately and requires approval.
+    - workItemID: work-item-016
+      eventID: synthetic-crm-016-v1
+      expectedFareClass: Economy
+      rationale: Standard customer health follow-up is on track with a long horizon.
+    - workItemID: work-item-017
+      eventID: synthetic-jira-017-v1
+      expectedFareClass: Economy
+      rationale: Low-severity dashboard copy work has no customer impact.
+    - workItemID: work-item-018
+      eventID: synthetic-strategy-018-v1
+      expectedFareClass: Business
+      rationale: Enterprise serving capacity is at 95% utilization with a ten-day shortfall risk.
+    - workItemID: work-item-019
+      eventID: synthetic-crm-019-v1
+      expectedFareClass: First class
+      rationale: Executive escalation combines strategic value with an imminent renewal.
+    - workItemID: work-item-020
+      eventID: synthetic-jira-020-v1
+      expectedFareClass: Economy
+      rationale: Low-severity archive cleanup is deferrable and has no customer impact.
+    # Controlled churn updates: the expected class changes with the new
+    # business facts rather than carrying forward the v1 outcome.
+    - workItemID: work-item-001
+      eventID: synthetic-crm-001-v2
+      expectedFareClass: Economy
+      rationale: The renewal is confirmed and no longer requires escalation.
+    - workItemID: work-item-002
+      eventID: synthetic-jira-002-v2
+      expectedFareClass: Economy
+      rationale: The former login incident is resolved and deployed with no current customer impact.
+    - workItemID: work-item-003
+      eventID: synthetic-strategy-003-v2
+      expectedFareClass: First class
+      rationale: Critical serving risk has a one-day review horizon and elevated latency.

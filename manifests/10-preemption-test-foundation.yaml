@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kueue-preemption-test
+  labels:
+    kueue.openshift.io/managed: "true"
+    app.kubernetes.io/part-of: kueue-preemption-test
+---
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: ResourceFlavor
+metadata:
+  name: preemption-test-cpu
+  labels:
+    app.kubernetes.io/part-of: kueue-preemption-test
+spec:
+  nodeLabels: {}
+---
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: ClusterQueue
+metadata:
+  name: preemption-test
+  labels:
+    app.kubernetes.io/part-of: kueue-preemption-test
+spec:
+  namespaceSelector:
+    matchLabels:
+      app.kubernetes.io/part-of: kueue-preemption-test
+  preemption:
+    withinClusterQueue: LowerPriority
+    reclaimWithinCohort: Never
+    borrowWithinCohort:
+      policy: Never
+  resourceGroups:
+    - coveredResources: [cpu, memory]
+      flavors:
+        - name: preemption-test-cpu
+          resources:
+            - name: cpu
+              nominalQuota: 500m
+            - name: memory
+              nominalQuota: 256Mi
+---
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: LocalQueue
+metadata:
+  name: preemption-test
+  namespace: kueue-preemption-test
+  labels:
+    app.kubernetes.io/part-of: kueue-preemption-test
+spec:
+  clusterQueue: preemption-test
+---
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: WorkloadPriorityClass
+metadata:
+  name: preempt-low
+  labels:
+    app.kubernetes.io/part-of: kueue-preemption-test
+value: 100
+description: Long-running preemption test subject.
+---
+apiVersion: kueue.x-k8s.io/v1beta2
+kind: WorkloadPriorityClass
+metadata:
+  name: preempt-high
+  labels:
+    app.kubernetes.io/part-of: kueue-preemption-test
+value: 1000
+description: Short preemption probe.
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: low-priority-subject
+  namespace: kueue-preemption-test
+  labels:
+    app.kubernetes.io/part-of: kueue-preemption-test
+    kueue.x-k8s.io/queue-name: preemption-test
+    kueue.x-k8s.io/priority-class: preempt-low
+spec:
+  backoffLimit: 6
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: subject
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "600"]
+          resources:
+            requests:
+              cpu: 500m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 128Mi

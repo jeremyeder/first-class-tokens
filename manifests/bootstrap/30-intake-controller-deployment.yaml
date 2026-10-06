@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intake-controller
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/name: intake-controller
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/part-of: business-priority-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: intake-controller
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: intake-controller
+        app.kubernetes.io/component: controller
+        app.kubernetes.io/part-of: business-priority-demo
+    spec:
+      serviceAccountName: intake-controller
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: controller
+          image: image-registry.openshift-image-registry.svc:5000/kueue-demo/intake-controller@sha256:22245d70395da53a1e37d01983e246dbd23525b0ab090a92d7e7c81949b40061
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: health
+              containerPort: 8080
+          env:
+            - name: DEMO_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: SYSTEMONE_URL
+              value: http://decision-model:8011
+            - name: FARE_POLICY_FILE
+              value: /etc/first-class-tokens/fare-policy.yaml
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: fare-policy
+              mountPath: /etc/first-class-tokens/fare-policy.yaml
+              subPath: fare-policy.yaml
+              readOnly: true
+      volumes:
+        - name: fare-policy
+          configMap:
+            name: fare-policy
+            items:
+              - key: fare-policy.yaml
+                path: fare-policy.yaml

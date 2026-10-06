@@ -1,0 +1,175 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: businessworkitems.tokens.jeder.github.com
+spec:
+  group: tokens.jeder.github.com
+  scope: Namespaced
+  names:
+    plural: businessworkitems
+    singular: businessworkitem
+    kind: BusinessWorkItem
+    listKind: BusinessWorkItemList
+    shortNames:
+      - bwi
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      subresources:
+        status: {}
+      additionalPrinterColumns:
+        - name: Stable ID
+          type: string
+          jsonPath: .spec.facts.stableID
+        - name: State
+          type: string
+          jsonPath: .spec.facts.businessState
+        - name: Fare
+          type: string
+          jsonPath: .status.fareClass
+        - name: Priority
+          type: string
+          jsonPath: .status.priorityClass
+        - name: Workload
+          type: string
+          jsonPath: .status.linkedWorkload.state
+      schema:
+        openAPIV3Schema:
+          type: object
+          required:
+            - spec
+          properties:
+            spec:
+              type: object
+              required:
+                - facts
+                - provenance
+                - link
+              properties:
+                provenance:
+                  type: string
+                  enum:
+                    - synthetic
+                facts:
+                  type: object
+                  required:
+                    - stableID
+                    - title
+                    - sourceCategory
+                  properties:
+                    stableID:
+                      type: string
+                      minLength: 1
+                    title:
+                      type: string
+                      minLength: 1
+                    sourceCategory:
+                      type: string
+                      enum:
+                        - crm
+                        - jira
+                        - strategy
+                        - issue-tracker
+                        - security
+                        - planned-work
+                        - evaluation
+                    businessState:
+                      type: string
+                      enum:
+                        - new
+                        - at-risk
+                        - blocked
+                        - in-progress
+                        - resolved
+                        - planned
+                        - complete
+                    valueTier:
+                      type: string
+                      enum:
+                        - strategic
+                        - high
+                        - standard
+                        - low
+                    urgency:
+                      type: string
+                      enum:
+                        - critical
+                        - high
+                        - normal
+                        - low
+                    costApproved:
+                      type: boolean
+                    sourceFacts:
+                      type: object
+                      description: Dynamic source-system fields supplied to the classifier.
+                      additionalProperties:
+                        type: string
+                link:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    jobName:
+                      type: string
+                    namespace:
+                      type: string
+                    uid:
+                      type: string
+            status:
+              type: object
+              properties:
+                observedGeneration:
+                  type: integer
+                  format: int64
+                fareClass:
+                  type: string
+                priorityClass:
+                  type: string
+                priorityValue:
+                  type: integer
+                  format: int32
+                decision:
+                  type: object
+                  properties:
+                    fareClass: {type: string}
+                    priorityClass: {type: string}
+                    priorityValue: {type: integer, format: int32}
+                    confidence: {type: number, format: double}
+                    reason: {type: string}
+                    sourceFact: {type: string}
+                    provider: {type: string}
+                    evaluatedAt: {type: string, format: date-time}
+                linkedWorkload:
+                  type: object
+                  properties:
+                    name: {type: string}
+                    state: {type: string}
+                    admitted: {type: boolean}
+                    reserved: {type: boolean}
+                    jobPatched: {type: boolean}
+                history:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - observedAt
+                      - businessState
+                      - outcome
+                      - decisionKey
+                    properties:
+                      observedAt: {type: string, format: date-time}
+                      previousBusinessState: {type: string}
+                      businessState: {type: string}
+                      previousFareClass: {type: string}
+                      fareClass: {type: string}
+                      previousPriorityClass: {type: string}
+                      priorityClass: {type: string}
+                      reason: {type: string}
+                      sourceFact: {type: string}
+                      outcome: {type: string}
+                      decisionKey: {type: string}
+                conditions:
+                  type: array
+                  items:
+                    x-kubernetes-preserve-unknown-fields: true

@@ -1,0 +1,34 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: first-class-tokens-intake
+  namespace: kueue-demo
+rules:
+  - apiGroups:
+      - tokens.jeder.github.com
+    resources:
+      - businessworkitems
+      - businessworkitems/status
+    verbs:
+      - get
+      - list
+      - watch
+      - patch
+      - update
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+    verbs:
+      - get
+      - list
+      - watch
+      - patch
+  - apiGroups:
+      - kueue.x-k8s.io
+    resources:
+      - workloads
+    verbs:
+      - get
+      - list
+      - watch

@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: first-class-tokens-dashboard
+  namespace: grafana
+  labels:
+    grafana_dashboard: "1"
+    app.kubernetes.io/part-of: business-priority-demo
+data:
+  first-class-tokens.json: |
+    {
+      "id": null,
+      "uid": "first-class-tokens-demo",
+      "title": "Business Priority Demo",
+      "description": "Decision throughput and safe Kueue projections. Model correctness is evaluated separately by the synthetic quality gate.",
+      "tags": ["business-priority-demo", "synthetic"],
+      "timezone": "browser",
+      "schemaVersion": 39,
+      "version": 1,
+      "refresh": "15s",
+      "time": {"from": "now-1h", "to": "now"},
+      "panels": [
+        {
+          "id": 1,
+          "type": "timeseries",
+          "title": "Intake decisions / second",
+          "description": "Model decisions by outcome and selected class.",
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+          "datasource": {"type": "prometheus", "uid": "Prometheus"},
+          "targets": [{"expr": "sum by (result, fare_class) (rate(first_class_tokens_intake_decisions_total[5m]))", "legendFormat": "{{result}} / {{fare_class}}", "refId": "A"}],
+          "fieldConfig": {"defaults": {"unit": "ops", "custom": {"drawStyle": "line", "lineWidth": 2, "fillOpacity": 10, "showPoints": "never"}}, "overrides": []},
+          "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}}
+        },
+        {
+          "id": 2,
+          "type": "timeseries",
+          "title": "Controller decision latency · p95",
+          "description": "Time the intake controller spends awaiting the direct model API.",
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+          "datasource": {"type": "prometheus", "uid": "Prometheus"},
+          "targets": [{"expr": "histogram_quantile(0.95, sum by (le, result) (rate(first_class_tokens_intake_decision_duration_seconds_bucket[5m])))", "legendFormat": "{{result}}", "refId": "A"}],
+          "fieldConfig": {"defaults": {"unit": "s", "custom": {"drawStyle": "line", "lineWidth": 2, "showPoints": "never"}}, "overrides": []},
+          "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}}
+        },
+        {
+          "id": 3,
+          "type": "timeseries",
+          "title": "Model adapter request latency · p95",
+          "description": "System One and other structured-adapter request duration.",
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+          "datasource": {"type": "prometheus", "uid": "Prometheus"},
+          "targets": [{"expr": "histogram_quantile(0.95, sum by (le, route) (rate(first_class_tokens_model_request_duration_seconds_bucket[5m])))", "legendFormat": "{{route}}", "refId": "A"}],
+          "fieldConfig": {"defaults": {"unit": "s", "custom": {"drawStyle": "line", "lineWidth": 2, "showPoints": "never"}}, "overrides": []},
+          "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}}
+        },
+        {
+          "id": 4,
+          "type": "timeseries",
+          "title": "Queue projections by outcome",
+          "description": "Shows patched pending Jobs separately from decisions blocked by safety guards.",
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+          "datasource": {"type": "prometheus", "uid": "Prometheus"},
+          "targets": [{"expr": "sum by (outcome, reason, fare_class) (rate(first_class_tokens_intake_projections_total[5m]))", "legendFormat": "{{outcome}} / {{reason}} / {{fare_class}}", "refId": "A"}],
+          "fieldConfig": {"defaults": {"unit": "ops", "custom": {"drawStyle": "bars", "lineWidth": 1, "fillOpacity": 45, "stacking": {"mode": "normal", "group": "A"}, "showPoints": "never"}}, "overrides": []},
+          "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}}
+        },
+        {
+          "id": 5,
+          "type": "timeseries",
+          "title": "Decision confidence · p50",
+          "description": "Confidence is a model score, not a standalone correctness measure; compare with the separate outcome gate.",
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+          "datasource": {"type": "prometheus", "uid": "Prometheus"},
+          "targets": [{"expr": "histogram_quantile(0.50, sum by (le, fare_class) (rate(first_class_tokens_intake_decision_confidence_bucket[5m])))", "legendFormat": "{{fare_class}}", "refId": "A"}],
+          "fieldConfig": {"defaults": {"unit": "percentunit", "min": 0, "max": 1, "custom": {"drawStyle": "line", "lineWidth": 2, "showPoints": "never"}}, "overrides": []},
+          "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}}
+        },
+        {
+          "id": 6,
+          "type": "timeseries",
+          "title": "Diffusion reads per decision · average",
+          "description": "Adaptive read count used by the structured decision adapter.",
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+          "datasource": {"type": "prometheus", "uid": "Prometheus"},
+          "targets": [{"expr": "sum by (route) (rate(first_class_tokens_model_decision_reads_sum[5m])) / clamp_min(sum by (route) (rate(first_class_tokens_model_decision_reads_count[5m])), 1e-9)", "legendFormat": "{{route}}", "refId": "A"}],
+          "fieldConfig": {"defaults": {"unit": "short", "custom": {"drawStyle": "line", "lineWidth": 2, "showPoints": "never"}}, "overrides": []},
+          "options": {"legend": {"displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}}
+        }
+      ]
+    }

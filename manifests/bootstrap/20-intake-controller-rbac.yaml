@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: intake-controller
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/name: intake-controller
+    app.kubernetes.io/part-of: business-priority-demo
+automountServiceAccountToken: true
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: intake-controller
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/name: intake-controller
+    app.kubernetes.io/part-of: business-priority-demo
+rules:
+  - apiGroups: ["tokens.jeder.github.com"]
+    resources: ["businessworkitems"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["tokens.jeder.github.com"]
+    resources: ["businessworkitems/status"]
+    verbs: ["get", "update", "patch"]
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["get", "list", "watch", "patch", "update"]
+  - apiGroups: ["kueue.x-k8s.io"]
+    resources: ["workloads"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: intake-controller
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/name: intake-controller
+    app.kubernetes.io/part-of: business-priority-demo
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: intake-controller
+subjects:
+  - kind: ServiceAccount
+    name: intake-controller
+    namespace: kueue-demo

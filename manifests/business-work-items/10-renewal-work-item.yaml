@@ -1,0 +1,27 @@
+apiVersion: tokens.jeder.github.com/v1alpha1
+kind: BusinessWorkItem
+metadata:
+  name: work-item-001
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    business-source: crm
+    data-provenance: synthetic
+spec:
+  provenance: synthetic
+  facts:
+    stableID: work-item-001
+    title: Strategic renewal at risk
+    sourceCategory: crm
+    businessState: at-risk
+    valueTier: strategic
+    urgency: high
+    costApproved: true
+    sourceFacts:
+      renewal_value_usd: "850000"
+      renewal_stage: at_risk
+      days_to_renewal: "12"
+      customer_tier: strategic
+  link:
+    jobName: renewal-recovery-plan
+    namespace: kueue-demo

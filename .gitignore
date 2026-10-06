@@ -1,0 +1,19 @@
+# Local evidence and presentation material; deliberately not versioned here.
+*.md
+!/README.md
+presentation/
+files/
+files.zip
+artifacts/
+.omo/
+
+# Local desktop metadata.
+.DS_Store
+__pycache__/
+*.py[cod]
+
+# Versioned operating contract and lifecycle design.
+!AGENTS.md
+!CLAUDE.md
+!docs/
+!docs/**/*.md

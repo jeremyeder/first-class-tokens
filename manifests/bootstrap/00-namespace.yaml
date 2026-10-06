@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kueue-demo
+  labels:
+    app.kubernetes.io/name: first-class-tokens
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.openshift.io/managed: "true"

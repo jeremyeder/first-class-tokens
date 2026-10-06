@@ -1,0 +1,248 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kueueviz
+  labels:
+    app.kubernetes.io/name: kueueviz
+    app.kubernetes.io/part-of: business-priority-demo
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kueueviz
+  namespace: kueueviz
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kueueviz-read
+  labels:
+    app.kubernetes.io/name: kueueviz
+rules:
+  - apiGroups: ["kueue.x-k8s.io"]
+    resources: ["workloads", "clusterqueues", "localqueues", "resourceflavors", "cohorts", "workloadpriorityclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["pods", "events", "nodes"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kueueviz-read
+  labels:
+    app.kubernetes.io/name: kueueviz
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kueueviz-read
+subjects:
+  - kind: ServiceAccount
+    name: kueueviz
+    namespace: kueueviz
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kueueviz-frontend-env
+  namespace: kueueviz
+  labels:
+    app.kubernetes.io/name: kueueviz
+data:
+  env.js: |
+    window.env = {};
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kueueviz-backend
+  namespace: kueueviz
+  labels:
+    app.kubernetes.io/name: kueueviz
+    app.kubernetes.io/component: backend
+spec:
+  selector:
+    app.kubernetes.io/name: kueueviz
+    app.kubernetes.io/component: backend
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kueueviz-frontend
+  namespace: kueueviz
+  labels:
+    app.kubernetes.io/name: kueueviz
+    app.kubernetes.io/component: frontend
+spec:
+  selector:
+    app.kubernetes.io/name: kueueviz
+    app.kubernetes.io/component: frontend
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kueueviz-backend
+  namespace: kueueviz
+  labels:
+    app.kubernetes.io/name: kueueviz
+    app.kubernetes.io/component: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kueueviz
+      app.kubernetes.io/component: backend
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kueueviz
+        app.kubernetes.io/component: backend
+    spec:
+      serviceAccountName: kueueviz
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: backend
+          image: registry.k8s.io/kueue/kueueviz-backend:v0.19.4
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            readOnlyRootFilesystem: true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kueueviz-frontend
+  namespace: kueueviz
+  labels:
+    app.kubernetes.io/name: kueueviz
+    app.kubernetes.io/component: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kueueviz
+      app.kubernetes.io/component: frontend
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kueueviz
+        app.kubernetes.io/component: frontend
+    spec:
+      serviceAccountName: kueueviz
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: frontend
+          image: registry.k8s.io/kueue/kueueviz-frontend:v0.19.4
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: env-config
+              mountPath: /app/build/env.js
+              subPath: env.js
+              readOnly: true
+      volumes:
+        - name: env-config
+          configMap:
+            name: kueueviz-frontend-env
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: kueueviz
+  namespace: kueueviz
+  labels:
+    app.kubernetes.io/name: kueueviz
+    app.kubernetes.io/component: frontend
+spec:
+  # Leave host unset so OpenShift generates a host for this cluster.
+  to:
+    kind: Service
+    name: kueueviz-frontend
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: kueueviz-backend
+  namespace: kueueviz
+  labels:
+    app.kubernetes.io/name: kueueviz
+    app.kubernetes.io/component: backend
+spec:
+  # Leave host unset so OpenShift generates a host for this cluster.
+  to:
+    kind: Service
+    name: kueueviz-backend
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

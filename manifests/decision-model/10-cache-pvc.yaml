@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: decision-model-cache
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/name: diffusiongemma-structured-decision
+    app.kubernetes.io/component: model-cache
+    app.kubernetes.io/part-of: business-priority-demo
+  annotations:
+    description: >-
+      Placeholder model cache. The cluster default StorageClass must provide
+      at least 100Gi and ReadWriteOnce for the single-GPU demo replica.
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi

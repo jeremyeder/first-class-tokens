@@ -1,0 +1,33 @@
+# Merged into the OpenShift-owned user-workload-monitoring-config ConfigMap by
+# scripts/enable-user-workload-monitoring.sh. Do not apply this file directly:
+# the script preserves any existing supported UWM settings.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-workload-monitoring-config
+  namespace: openshift-user-workload-monitoring
+data:
+  config.yaml: |
+    prometheus:
+      retention: 7d
+      retentionSize: 8GB
+      volumeClaimTemplate:
+        spec:
+          storageClassName: gp3-csi
+          resources:
+            requests:
+              storage: 10Gi
+    alertmanager:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: gp3-csi
+          resources:
+            requests:
+              storage: 2Gi
+    thanosRuler:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: gp3-csi
+          resources:
+            requests:
+              storage: 5Gi

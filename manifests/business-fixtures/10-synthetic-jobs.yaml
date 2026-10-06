@@ -1,0 +1,478 @@
+# These Jobs are the suspended queue projections for fixture items 004-020.
+# Items 001-003 deliberately use the three baseline Jobs in 00-demo-lane.yaml
+# so the capacity-holder safety scenario remains unchanged.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: customer-onboarding-004
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.x-k8s.io/queue-name: business-priority
+    kueue.x-k8s.io/priority-class: fare-economy
+    demo.kueue.io/fixture: synthetic-event-feed
+    demo.kueue.io/business-source: crm
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: work
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "300"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: billing-reconciliation-005
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.x-k8s.io/queue-name: business-priority
+    kueue.x-k8s.io/priority-class: fare-economy
+    demo.kueue.io/fixture: synthetic-event-feed
+    demo.kueue.io/business-source: jira
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: work
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "300"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: platform-upgrade-006
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.x-k8s.io/queue-name: business-priority
+    kueue.x-k8s.io/priority-class: fare-economy
+    demo.kueue.io/fixture: synthetic-event-feed
+    demo.kueue.io/business-source: strategy
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: work
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "300"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: renewal-recovery-plan-007
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.x-k8s.io/queue-name: business-priority
+    kueue.x-k8s.io/priority-class: fare-economy
+    demo.kueue.io/fixture: synthetic-event-feed
+    demo.kueue.io/business-source: crm
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: work
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "300"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: data-retention-008
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.x-k8s.io/queue-name: business-priority
+    kueue.x-k8s.io/priority-class: fare-economy
+    demo.kueue.io/fixture: synthetic-event-feed
+    demo.kueue.io/business-source: jira
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: work
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "300"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: inference-latency-009
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.x-k8s.io/queue-name: business-priority
+    kueue.x-k8s.io/priority-class: fare-economy
+    demo.kueue.io/fixture: synthetic-event-feed
+    demo.kueue.io/business-source: strategy
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: work
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "300"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: renewal-recovery-plan-010
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.x-k8s.io/queue-name: business-priority
+    kueue.x-k8s.io/priority-class: fare-economy
+    demo.kueue.io/fixture: synthetic-event-feed
+    demo.kueue.io/business-source: crm
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: work
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "300"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dependency-refresh-011
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.x-k8s.io/queue-name: business-priority
+    kueue.x-k8s.io/priority-class: fare-economy
+    demo.kueue.io/fixture: synthetic-event-feed
+    demo.kueue.io/business-source: jira
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: work
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "300"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: model-rollout-012
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.x-k8s.io/queue-name: business-priority
+    kueue.x-k8s.io/priority-class: fare-economy
+    demo.kueue.io/fixture: synthetic-event-feed
+    demo.kueue.io/business-source: strategy
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: work
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "300"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: renewal-recovery-plan-013
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.x-k8s.io/queue-name: business-priority
+    kueue.x-k8s.io/priority-class: fare-economy
+    demo.kueue.io/fixture: synthetic-event-feed
+    demo.kueue.io/business-source: crm
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: work
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "300"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: audit-export-014
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.x-k8s.io/queue-name: business-priority
+    kueue.x-k8s.io/priority-class: fare-economy
+    demo.kueue.io/fixture: synthetic-event-feed
+    demo.kueue.io/business-source: jira
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: work
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "300"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: security-hotfix-015
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.x-k8s.io/queue-name: business-priority
+    kueue.x-k8s.io/priority-class: fare-economy
+    demo.kueue.io/fixture: synthetic-event-feed
+    demo.kueue.io/business-source: strategy
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: work
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "300"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: customer-health-016
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.x-k8s.io/queue-name: business-priority
+    kueue.x-k8s.io/priority-class: fare-economy
+    demo.kueue.io/fixture: synthetic-event-feed
+    demo.kueue.io/business-source: crm
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: work
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "300"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dashboard-copy-017
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.x-k8s.io/queue-name: business-priority
+    kueue.x-k8s.io/priority-class: fare-economy
+    demo.kueue.io/fixture: synthetic-event-feed
+    demo.kueue.io/business-source: jira
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: work
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "300"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: serving-capacity-018
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.x-k8s.io/queue-name: business-priority
+    kueue.x-k8s.io/priority-class: fare-economy
+    demo.kueue.io/fixture: synthetic-event-feed
+    demo.kueue.io/business-source: strategy
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: work
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "300"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: renewal-recovery-plan-019
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.x-k8s.io/queue-name: business-priority
+    kueue.x-k8s.io/priority-class: fare-economy
+    demo.kueue.io/fixture: synthetic-event-feed
+    demo.kueue.io/business-source: crm
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: work
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "300"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: archive-cleanup-020
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    kueue.x-k8s.io/queue-name: business-priority
+    kueue.x-k8s.io/priority-class: fare-economy
+    demo.kueue.io/fixture: synthetic-event-feed
+    demo.kueue.io/business-source: jira
+spec:
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: work
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "300"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi

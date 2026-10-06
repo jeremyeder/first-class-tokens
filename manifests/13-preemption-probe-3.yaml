@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: preemption-probe-3
+  namespace: kueue-preemption-test
+  labels:
+    app.kubernetes.io/part-of: kueue-preemption-test
+    kueue.x-k8s.io/queue-name: preemption-test
+    kueue.x-k8s.io/priority-class: preempt-high
+spec:
+  backoffLimit: 0
+  suspend: true
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: probe
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sleep", "8"]
+          resources:
+            requests: {cpu: 500m, memory: 128Mi}
+            limits: {cpu: 500m, memory: 128Mi}

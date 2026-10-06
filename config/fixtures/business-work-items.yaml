@@ -1,0 +1,126 @@
+apiVersion: tokens.jeder.github.com/v1alpha1
+kind: BusinessWorkItemList
+metadata:
+  name: synthetic-business-work-items
+  provenance: synthetic
+items:
+  - id: work-item-001
+    source: crm
+    sourceRef: synthetic-crm-001
+    linkedJob: renewal-recovery-plan
+    provenance: synthetic
+    title: Strategic renewal at risk
+  - id: work-item-002
+    source: jira
+    sourceRef: synthetic-jira-002
+    linkedJob: auth-regression-fix
+    provenance: synthetic
+    title: Authentication regression
+  - id: work-item-003
+    source: strategy
+    sourceRef: synthetic-strategy-003
+    linkedJob: documentation-refresh
+    provenance: synthetic
+    title: Model-serving capacity review
+  - id: work-item-004
+    source: crm
+    sourceRef: synthetic-crm-004
+    linkedJob: customer-onboarding-004
+    provenance: synthetic
+    title: Enterprise onboarding milestone
+  - id: work-item-005
+    source: jira
+    sourceRef: synthetic-jira-005
+    linkedJob: billing-reconciliation-005
+    provenance: synthetic
+    title: Billing reconciliation exception
+  - id: work-item-006
+    source: strategy
+    sourceRef: synthetic-strategy-006
+    linkedJob: platform-upgrade-006
+    provenance: synthetic
+    title: Planned platform upgrade
+  - id: work-item-007
+    source: crm
+    sourceRef: synthetic-crm-007
+    linkedJob: renewal-recovery-plan-007
+    provenance: synthetic
+    title: Contract escalation
+  - id: work-item-008
+    source: jira
+    sourceRef: synthetic-jira-008
+    linkedJob: data-retention-008
+    provenance: synthetic
+    title: Data-retention housekeeping
+  - id: work-item-009
+    source: strategy
+    sourceRef: synthetic-strategy-009
+    linkedJob: inference-latency-009
+    provenance: synthetic
+    title: Inference latency investigation
+  - id: work-item-010
+    source: crm
+    sourceRef: synthetic-crm-010
+    linkedJob: renewal-recovery-plan-010
+    provenance: synthetic
+    title: High-value renewal deadline
+  - id: work-item-011
+    source: jira
+    sourceRef: synthetic-jira-011
+    linkedJob: dependency-refresh-011
+    provenance: synthetic
+    title: Routine dependency refresh
+  - id: work-item-012
+    source: strategy
+    sourceRef: synthetic-strategy-012
+    linkedJob: model-rollout-012
+    provenance: synthetic
+    title: Staged model rollout
+  - id: work-item-013
+    source: crm
+    sourceRef: synthetic-crm-013
+    linkedJob: renewal-recovery-plan-013
+    provenance: synthetic
+    title: Renewal forecast change
+  - id: work-item-014
+    source: jira
+    sourceRef: synthetic-jira-014
+    linkedJob: audit-export-014
+    provenance: synthetic
+    title: Quarterly audit export
+  - id: work-item-015
+    source: strategy
+    sourceRef: synthetic-strategy-015
+    linkedJob: security-hotfix-015
+    provenance: synthetic
+    title: Security hotfix validation
+  - id: work-item-016
+    source: crm
+    sourceRef: synthetic-crm-016
+    linkedJob: customer-health-016
+    provenance: synthetic
+    title: Customer health follow-up
+  - id: work-item-017
+    source: jira
+    sourceRef: synthetic-jira-017
+    linkedJob: dashboard-copy-017
+    provenance: synthetic
+    title: Dashboard copy update
+  - id: work-item-018
+    source: strategy
+    sourceRef: synthetic-strategy-018
+    linkedJob: serving-capacity-018
+    provenance: synthetic
+    title: Serving capacity request
+  - id: work-item-019
+    source: crm
+    sourceRef: synthetic-crm-019
+    linkedJob: renewal-recovery-plan-019
+    provenance: synthetic
+    title: Executive renewal intervention
+  - id: work-item-020
+    source: jira
+    sourceRef: synthetic-jira-020
+    linkedJob: archive-cleanup-020
+    provenance: synthetic
+    title: Archive cleanup

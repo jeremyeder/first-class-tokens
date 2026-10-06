@@ -1,0 +1,10 @@
+.git/
+.omo/
+artifacts/
+files/
+presentation/
+snapshots/
+events/
+*.md
+*.zip
+.DS_Store

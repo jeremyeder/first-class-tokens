@@ -1,0 +1,43 @@
+apiVersion: tokens.jeder.github.com/v1alpha1
+kind: FarePolicy
+metadata:
+  name: business-priority-v1
+  labels:
+    app.kubernetes.io/part-of: business-priority-demo
+    data-provenance: synthetic
+spec:
+  classes:
+    first:
+      kueuePriorityClass: fare-first-class
+      priorityValue: 1000
+      definition: Material customer, security, or revenue risk requiring immediate attention.
+    business:
+      kueuePriorityClass: fare-business
+      priorityValue: 500
+      definition: Customer-impacting work with meaningful urgency.
+    economy:
+      kueuePriorityClass: fare-economy
+      priorityValue: 100
+      definition: Planned, deferrable, or low-urgency work.
+  inputs:
+    - source
+    - businessState
+    - valueTier
+    - urgency
+    - approvalRequired
+    - sourceFacts
+  decision:
+    model: RedHatAI/diffusiongemma-26B-A4B-it-FP8-dynamic
+    choices:
+      - economy
+      - business
+      - first
+    instructions: >-
+      Evaluate the supplied current business facts using these configured class
+      definitions. Choose exactly one allowed class. Do not infer facts that
+      are not present in the event data.
+    minimumConfidence: 0.80
+    onUncertain: leave-current-priority
+  hardGuards:
+    - onlyPendingAndUnreservedJobs
+    - syntheticProvenanceRequired

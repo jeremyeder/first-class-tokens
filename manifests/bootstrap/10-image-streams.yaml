@@ -1,0 +1,23 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: intake-controller
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/name: intake-controller
+    app.kubernetes.io/part-of: business-priority-demo
+spec:
+  lookupPolicy:
+    local: true
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: diffusiongemma-structured-decision
+  namespace: kueue-demo
+  labels:
+    app.kubernetes.io/name: diffusiongemma-structured-decision
+    app.kubernetes.io/part-of: business-priority-demo
+spec:
+  lookupPolicy:
+    local: true

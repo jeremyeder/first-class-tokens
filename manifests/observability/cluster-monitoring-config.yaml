@@ -1,0 +1,11 @@
+# Optional platform prerequisite. This file is intentionally not included by
+# manifests/observability/kustomization.yaml; enabling user-workload monitoring
+# changes cluster monitoring configuration and must be applied explicitly.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-monitoring-config
+  namespace: openshift-monitoring
+data:
+  config.yaml: |
+    enableUserWorkload: true
